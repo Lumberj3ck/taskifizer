@@ -2,6 +2,8 @@
 
 An Obsidian plugin that turns finished tasks into a small daily painting.
 
+![Taskifizer: a daily note with tasks on the left and today's half-painted field in the sidebar](docs/screenshot.png)
+
 Every task in today's daily note has a price in cells. Each day has a field of a fixed size
 (20 × 12 = 240 cells by default). Finish a task and you earn its cells; then you paint them onto
 the field yourself, one click or one drag at a time, and each painted cell uncovers part of the
