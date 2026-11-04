@@ -1,0 +1,9 @@
+{
+  "id": "taskifizer",
+  "name": "Taskifizer",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Finish tasks in your daily note to earn cells, then paint them to uncover a hidden picture.",
+  "author": "lumberj3ck",
+  "isDesktopOnly": false
+}

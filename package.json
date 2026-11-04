@@ -1,0 +1,23 @@
+{
+  "name": "taskifizer",
+  "version": "0.1.0",
+  "description": "Finish tasks in your daily note to earn cells, then paint them to uncover a hidden picture.",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/run.mjs",
+    "preview": "node preview/build.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "moment": "^2.30.1",
+    "obsidian": "^1.14.4",
+    "typescript": "^5.9.3"
+  },
+  "type": "module"
+}

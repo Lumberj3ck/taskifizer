@@ -1,0 +1,204 @@
+<title>Taskifizer Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one mock Obsidian window, note on the left, the real plugin view in the right sidebar */
+:root {
+  --page: #eceef1;
+  --background-primary: #ffffff;
+  --background-primary-alt: #fafafa;
+  --background-secondary: #f6f6f6;
+  --background-modifier-border: #e3e3e3;
+  --background-modifier-hover: rgba(0, 0, 0, 0.045);
+  --text-normal: #222222;
+  --text-muted: #5c5c5c;
+  --text-faint: #a3a3a3;
+  --text-accent: #7852ee;
+  --interactive-accent: #8a5cf5;
+  --color-yellow: #e0ac00;
+  --color-red: #e93147;
+  --font-interface: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-monospace: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-ui-smaller: 12px;
+  --font-ui-small: 13px;
+  --font-ui-medium: 15px;
+  --window-shadow: 0 1px 2px rgba(0,0,0,.05), 0 24px 60px -24px rgba(20,20,40,.28);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0f0f11;
+    --background-primary: #1e1e1e;
+    --background-primary-alt: #242424;
+    --background-secondary: #262626;
+    --background-modifier-border: #333333;
+    --background-modifier-hover: rgba(255, 255, 255, 0.06);
+    --text-normal: #dadada;
+    --text-muted: #a8a8a8;
+    --text-faint: #6b6b6b;
+    --text-accent: #a68af9;
+    --interactive-accent: #8a5cf5;
+    --color-yellow: #e0de71;
+    --color-red: #fb464c;
+    --window-shadow: 0 1px 2px rgba(0,0,0,.4), 0 30px 70px -20px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0f0f11;
+  --background-primary: #1e1e1e;
+  --background-primary-alt: #242424;
+  --background-secondary: #262626;
+  --background-modifier-border: #333333;
+  --background-modifier-hover: rgba(255, 255, 255, 0.06);
+  --text-normal: #dadada;
+  --text-muted: #a8a8a8;
+  --text-faint: #6b6b6b;
+  --text-accent: #a68af9;
+  --interactive-accent: #8a5cf5;
+  --color-yellow: #e0de71;
+  --color-red: #fb464c;
+  --window-shadow: 0 1px 2px rgba(0,0,0,.4), 0 30px 70px -20px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--page);
+  color: var(--text-normal);
+  font-family: var(--font-interface);
+  font-size: 14px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.page { max-width: 1120px; margin: 0 auto; display: grid; gap: 14px; }
+.bar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 0 2px; }
+.bar h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.bar p { margin: 0; color: var(--text-muted); font-size: 13px; }
+.bar button { all: unset; cursor: pointer; font-size: 13px; color: var(--text-muted); }
+.bar button:hover { color: var(--text-normal); }
+.bar button:focus-visible { outline: 2px solid var(--interactive-accent); outline-offset: 3px; border-radius: 3px; }
+
+/* Window */
+.app {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 340px;
+  grid-template-rows: 38px minmax(0, 1fr);
+  height: 700px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--background-secondary);
+  box-shadow: 0 0 0 1px var(--background-modifier-border), var(--window-shadow);
+}
+.titlebar { grid-column: 1 / -1; display: grid; grid-template-columns: 40px minmax(0,1fr) 340px; border-bottom: 1px solid var(--background-modifier-border); }
+.lights { display: flex; gap: 6px; align-items: center; padding-left: 12px; }
+.lights i { width: 10px; height: 10px; border-radius: 50%; background: var(--background-modifier-border); }
+.tabs { display: flex; align-items: flex-end; padding-left: 8px; }
+.tab { height: 30px; padding: 0 14px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; background: var(--background-primary); border-radius: 7px 7px 0 0; color: var(--text-normal); box-shadow: 0 0 0 1px var(--background-modifier-border); clip-path: inset(-1px -1px 0 -1px); }
+.side-tabs { display: flex; align-items: center; gap: 4px; padding: 0 10px; border-left: 1px solid var(--background-modifier-border); }
+.side-tabs span { width: 26px; height: 26px; border-radius: 5px; display: grid; place-items: center; color: var(--text-faint); }
+.side-tabs span.on { background: var(--background-modifier-hover); color: var(--text-normal); }
+.side-tabs svg, .ribbon svg { width: 16px; height: 16px; }
+
+.ribbon { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 8px; border-right: 1px solid var(--background-modifier-border); color: var(--text-faint); }
+.ribbon span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 5px; }
+
+.editor { background: var(--background-primary); overflow: auto; min-width: 0; }
+.note { max-width: 640px; margin: 0 auto; padding: 44px 40px 60px; }
+.inline-title { font-size: 28px; font-weight: 700; letter-spacing: -0.015em; margin: 0 0 22px; }
+.note h2 { font-size: 20px; font-weight: 650; margin: 0 0 8px; letter-spacing: -0.01em; }
+.tasks { list-style: none; margin: 0; padding: 0; }
+.task { display: flex; align-items: flex-start; gap: 9px; padding: 2px 0; line-height: 1.6; }
+.task input {
+  appearance: none; flex: none; width: 15px; height: 15px; margin: 4px 0 0; border-radius: 4px;
+  border: 1px solid var(--text-faint); cursor: pointer; display: grid; place-items: center;
+  transition: background .12s, border-color .12s;
+}
+.task input:checked { background: var(--interactive-accent); border-color: var(--interactive-accent); }
+.task input:checked::after { content: ""; width: 8px; height: 4px; border: 1.6px solid #fff; border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.task input:focus-visible { outline: 2px solid var(--interactive-accent); outline-offset: 2px; }
+.task label { cursor: pointer; min-width: 0; }
+.task.is-checked label { color: var(--text-faint); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--text-faint) 60%, transparent); }
+.tag { color: var(--text-accent); background: color-mix(in srgb, var(--interactive-accent) 12%, transparent); border-radius: 1em; padding: 0 .6em; font-size: .86em; text-decoration: none; display: inline-block; line-height: 1.5; }
+.field { font-family: var(--font-monospace); font-size: .82em; color: var(--text-muted); }
+.task.is-checked .tag { opacity: .6; }
+.add { display: flex; align-items: center; gap: 9px; padding: 2px 0; margin-top: 2px; }
+.add::before { content: ""; width: 15px; height: 15px; flex: none; border-radius: 4px; border: 1px dashed var(--text-faint); }
+.add input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--text-normal); font: inherit; padding: 2px 0; }
+.add input::placeholder { color: var(--text-faint); }
+.add input:focus { outline: none; }
+
+.sidebar { background: var(--background-secondary); border-left: 1px solid var(--background-modifier-border); overflow: auto; min-width: 0; }
+#tz-root { padding: 0 18px; }
+
+.status { position: absolute; right: 0; bottom: 0; padding: 3px 12px; font-size: 11.5px; color: var(--text-muted); background: var(--background-secondary); border-top-left-radius: 7px; box-shadow: 0 0 0 1px var(--background-modifier-border); display: flex; gap: 14px; }
+
+#notices { position: absolute; top: 50px; right: 14px; display: grid; gap: 8px; justify-items: end; z-index: 10; pointer-events: none; }
+.notice { background: var(--background-primary); color: var(--text-normal); font-size: 13px; padding: 9px 14px; border-radius: 8px; box-shadow: 0 0 0 1px var(--background-modifier-border), 0 8px 24px -8px rgba(0,0,0,.3); animation: n-in .2s ease-out; }
+.notice.is-leaving { animation: n-out .25s ease-in forwards; }
+@keyframes n-in { from { opacity: 0; transform: translateY(-4px); } }
+@keyframes n-out { to { opacity: 0; } }
+
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: 38px auto auto; height: auto; }
+  .titlebar { grid-template-columns: auto minmax(0,1fr); }
+  .side-tabs, .ribbon { display: none; }
+  .note { padding: 28px 20px 32px; }
+  .sidebar { border-left: 0; border-top: 1px solid var(--background-modifier-border); padding-bottom: 28px; }
+  #notices { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { .notice, .notice.is-leaving { animation: none; } }
+
+/*PLUGIN_CSS*/
+</style>
+
+<div class="page">
+  <div class="bar">
+    <div>
+      <h1>Taskifizer</h1>
+      <p>Tick tasks in the note to earn cells, then click or drag on the field to paint them.</p>
+    </div>
+    <button type="button" id="reset">Reset</button>
+  </div>
+
+  <div class="app">
+    <div class="titlebar">
+      <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="tabs"><div class="tab">2026-11-04</div></div>
+      <div class="side-tabs" aria-hidden="true">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><path d="M8 12h8"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg></span>
+        <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></span>
+      </div>
+    </div>
+
+    <nav class="ribbon" aria-hidden="true">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6l2 2h8v12H4z"/></svg></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3"/></svg></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
+    </nav>
+
+    <main class="editor">
+      <article class="note">
+        <div class="inline-title">2026-11-04</div>
+        <h2>Today</h2>
+        <ul class="tasks" id="tasks"></ul>
+        <form class="add" id="add" autocomplete="off">
+          <input type="text" id="add-input" placeholder="New task, e.g. Pay rent #s or Tax return [cells:: 70]" aria-label="New task">
+        </form>
+      </article>
+    </main>
+
+    <aside class="sidebar" aria-label="Taskifizer">
+      <div id="tz-root"></div>
+    </aside>
+
+    <div class="status"><span id="status-tz"></span><span>0 backlinks</span></div>
+    <div id="notices" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+//PREVIEW_JS
+</script>

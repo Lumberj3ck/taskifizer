@@ -1,0 +1,302 @@
+/*
+ * Taskifizer
+ * Everything takes its color and type from Obsidian's theme variables,
+ * so the view sits naturally inside any theme, light or dark.
+ */
+
+.taskifizer {
+  --tz-accent: var(--interactive-accent);
+  --tz-gold: var(--color-yellow);
+  --tz-danger: var(--color-red);
+  --tz-cell: color-mix(in srgb, var(--text-normal) 6%, transparent);
+  --tz-hair: var(--background-modifier-border);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 20px;
+  padding-bottom: 28px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Header */
+.taskifizer .tz-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+.taskifizer .tz-weekday {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-normal);
+}
+.taskifizer .tz-date {
+  margin-top: 3px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+.taskifizer .tz-streak {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-bottom: 1px;
+}
+.taskifizer .tz-streak-n {
+  color: var(--text-normal);
+  font-weight: 600;
+}
+
+/* Field: the picture is the point, so it gets the only frame in the view */
+.taskifizer .tz-frame {
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--background-primary);
+  box-shadow:
+    0 0 0 1px var(--tz-hair),
+    0 1px 1px rgba(0, 0, 0, 0.04),
+    0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.6s ease;
+}
+.taskifizer .tz-frame.is-complete {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tz-gold) 55%, transparent),
+    0 10px 32px -12px color-mix(in srgb, var(--tz-gold) 45%, transparent);
+}
+.taskifizer .tz-field {
+  display: grid;
+  grid-template-columns: repeat(var(--tz-cols, 20), minmax(0, 1fr));
+  gap: 1px;
+  border-radius: 5px;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+.taskifizer .tz-field.can-paint {
+  cursor: crosshair;
+}
+.taskifizer .tz-cell {
+  aspect-ratio: 1;
+  background: var(--tz-cell);
+  position: relative;
+}
+.taskifizer .tz-field.can-paint .tz-cell:not(.is-on):hover {
+  background: color-mix(in srgb, var(--tz-accent) 40%, var(--tz-cell));
+}
+.taskifizer .tz-cell.is-on {
+  background: var(--tz-c);
+  animation: tz-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.taskifizer .tz-field.tz-no-anim .tz-cell {
+  animation: none;
+}
+.taskifizer .tz-field.show-gold .tz-cell.is-gold:not(.is-on)::after {
+  content: "";
+  position: absolute;
+  inset: 34%;
+  border-radius: 50%;
+  background: var(--tz-gold);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--tz-gold) 70%, transparent);
+}
+.taskifizer .tz-cell.tz-burst {
+  z-index: 1;
+  animation: tz-burst 0.8s ease-out;
+}
+.taskifizer .tz-frame.is-complete .tz-field {
+  animation: tz-glow 1.8s ease-out;
+}
+@keyframes tz-in {
+  from { transform: scale(0.5); filter: brightness(1.7); }
+  to { transform: none; filter: none; }
+}
+@keyframes tz-burst {
+  0% { box-shadow: 0 0 0 0 var(--tz-gold); filter: brightness(1.8); }
+  100% { box-shadow: 0 0 0 9px transparent; filter: none; }
+}
+@keyframes tz-glow {
+  30% { filter: brightness(1.25) saturate(1.15); }
+}
+
+/* Numbers */
+.taskifizer .tz-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: -4px;
+}
+.taskifizer .tz-num {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-normal);
+  transition: color 0.3s ease;
+}
+.taskifizer .tz-of {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-faint);
+  margin-left: 2px;
+}
+.taskifizer .tz-cap {
+  margin-top: 6px;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}
+.taskifizer .tz-ink {
+  text-align: right;
+}
+.taskifizer .tz-ink .tz-num {
+  color: var(--text-faint);
+}
+.taskifizer .tz-ink.is-ready .tz-num {
+  color: var(--tz-accent);
+}
+.taskifizer .tz-ink.is-owed .tz-num {
+  color: var(--tz-danger);
+}
+.taskifizer .tz-ink.tz-shake {
+  animation: tz-shake 0.36s ease;
+}
+@keyframes tz-shake {
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* Plan meter */
+.taskifizer .tz-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: -6px;
+}
+.taskifizer .tz-meter {
+  display: flex;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--tz-cell);
+}
+.taskifizer .tz-seg {
+  height: 100%;
+  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.taskifizer .tz-seg-painted {
+  background: var(--tz-accent);
+}
+.taskifizer .tz-seg-ready {
+  background: color-mix(in srgb, var(--tz-accent) 45%, transparent);
+}
+.taskifizer .tz-seg-planned {
+  background: color-mix(in srgb, var(--text-normal) 16%, transparent);
+}
+.taskifizer .tz-seg-gap.is-short {
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tz-danger) 55%, transparent) 0 2px,
+    transparent 2px 5px
+  );
+}
+.taskifizer .tz-plan-caption {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}
+.taskifizer .tz-plan-state {
+  color: var(--text-faint);
+}
+.taskifizer .tz-plan-state.is-short {
+  color: var(--tz-danger);
+}
+
+/* Missing daily note */
+.taskifizer .tz-missing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--background-modifier-hover);
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+.taskifizer button.tz-link {
+  all: unset;
+  cursor: pointer;
+  color: var(--text-accent);
+  font-weight: 500;
+}
+.taskifizer button.tz-link:hover {
+  text-decoration: underline;
+}
+.taskifizer button.tz-link:focus-visible {
+  outline: 2px solid var(--tz-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Week */
+.taskifizer .tz-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tz-hair);
+}
+.taskifizer .tz-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+.taskifizer .tz-day canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border-radius: 3px;
+  background: var(--tz-cell);
+}
+.taskifizer .tz-day:not(.is-full) canvas {
+  opacity: 0.6;
+}
+.taskifizer .tz-day.is-today canvas {
+  opacity: 1;
+  outline: 1px solid var(--tz-accent);
+  outline-offset: 2px;
+}
+.taskifizer .tz-day-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+.taskifizer .tz-day.is-today .tz-day-label {
+  color: var(--text-normal);
+}
+
+/* Status bar */
+.taskifizer-status {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Settings */
+.taskifizer-num {
+  width: 80px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taskifizer .tz-cell.is-on,
+  .taskifizer .tz-cell.tz-burst,
+  .taskifizer .tz-frame.is-complete .tz-field,
+  .taskifizer .tz-ink.tz-shake {
+    animation: none;
+  }
+  .taskifizer .tz-seg {
+    transition: none;
+  }
+}
